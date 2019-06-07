@@ -13,11 +13,11 @@ ENV SCRIPT_WRAPPER=${BAMBOO_USER_HOME}/runAgent.sh
 ENV INIT_BAMBOO_CAPABILITIES=${BAMBOO_USER_HOME}/init-bamboo-capabilities.properties
 ENV BAMBOO_CAPABILITIES=${BAMBOO_AGENT_HOME}/bin/bamboo-capabilities.properties
 
-RUN apt-get update -y && \
-    apt-get upgrade -y && \
+RUN apt-get update -y  \
+    && apt-get upgrade -y \
     # please keep Java version in sync with JDK capabilities below
-    apt-get install -y openjdk-8-jdk && \
-    apt-get install -y curl
+    && apt-get install -y openjdk-8-jdk \
+    && apt-get install -y curl
 
 #Install dotnet
 RUN apt-get install sudo \
@@ -43,6 +43,24 @@ RUN apt-get update \
 RUN wget -O /tmp/geckodriver.tar.gz https://github.com/mozilla/geckodriver/releases/download/v0.24.0/geckodriver-v0.24.0-linux64.tar.gz \
     && tar -C /opt -zxf /tmp/geckodriver.tar.gz \
     && rm /tmp/geckodriver.tar.gz 
+
+# install necessary locales
+RUN apt-get install -y locales \
+    && echo "en_US.UTF-8 UTF-8" > /etc/locale.gen \
+    && locale-gen
+
+#Install MSSQL
+COPY mssql_install.sh /tmp
+
+RUN chmod +x /tmp/mssql_install.sh \
+	&& /tmp/mssql_install.sh 
+
+RUN echo "deb [arch=amd64] https://packages.microsoft.com/ubuntu/16.04/prod xenial main" | sudo tee /etc/apt/sources.list.d/mssql.list \
+    && sudo apt install libcurl3 -y \
+    && sudo apt-get install systemd -y \
+    && apt-get install -y curl
+
+RUN chmod +x /opt/mssql/bin/sqlservr
 
 
 RUN addgroup ${BAMBOO_GROUP} && \
