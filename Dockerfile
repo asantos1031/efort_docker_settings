@@ -49,7 +49,10 @@ RUN apt-get install -y locales \
     && echo "en_US.UTF-8 UTF-8" > /etc/locale.gen \
     && locale-gen
 
+RUN apt-get install unzip
+
 #Install MSSQL
+COPY sqlpackage-linux-x64-150.4384.2.zip /tmp
 COPY mssql_install.sh /tmp
 
 RUN chmod +x /tmp/mssql_install.sh \
@@ -58,10 +61,11 @@ RUN chmod +x /tmp/mssql_install.sh \
 RUN echo "deb [arch=amd64] https://packages.microsoft.com/ubuntu/16.04/prod xenial main" | sudo tee /etc/apt/sources.list.d/mssql.list \
     && sudo apt install libcurl3 -y \
     && sudo apt-get install systemd -y \
-    && apt-get install -y curl
+    && apt-get install -y curl 
 
 RUN chmod +x /opt/mssql/bin/sqlservr
 
+RUN apt-get install lsof
 
 RUN addgroup ${BAMBOO_GROUP} && \
      adduser --home ${BAMBOO_USER_HOME} --ingroup ${BAMBOO_GROUP} --disabled-password ${BAMBOO_USER}

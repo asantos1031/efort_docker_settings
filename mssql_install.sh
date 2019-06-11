@@ -13,12 +13,6 @@ MSSQL_PID='express'
 # Install SQL Server Agent (recommended)
 SQL_INSTALL_AGENT='y'
 
-# Install SQL Server Full Text Search (optional)
-# SQL_INSTALL_FULLTEXT='y'
-
-# Create an additional user with sysadmin privileges (optional)
-# SQL_INSTALL_USER='<Username>'
-# SQL_INSTALL_USER_PASSWORD='<YourStrong!Passw0rd>'
 
 if [ -z $MSSQL_SA_PASSWORD ]
 then
@@ -51,6 +45,14 @@ sudo ACCEPT_EULA=Y apt-get install -y mssql-tools unixodbc-dev
 echo Adding SQL Server tools to your path...
 echo PATH="$PATH:/opt/mssql-tools/bin" >> ~/.bash_profile
 echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bashrc
+source ~/.bashrc
+
+#Install sqlpackage
+mkdir /opt/sqlpackage 
+unzip /tmp/sqlpackage-linux-x64-150.4384.2.zip -d /opt/sqlpackage/ 
+echo PATH="$PATH:/opt/sqlpackage" >> ~/.bash_profile
+echo 'export PATH="$PATH:/opt/sqlpackage"' >> ~/.bashrc
+chmod a+x /opt/sqlpackage/sqlpackage
 source ~/.bashrc
 
 echo Done!
