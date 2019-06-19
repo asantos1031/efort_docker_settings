@@ -34,13 +34,16 @@ RUN apt-get install sudo \
     && sudo apt-get update \
     && sudo apt-get install dotnet-sdk-2.2 -y 
 
-#Install firefox (iceweasel)
-RUN apt-get update \
-    && apt-get upgrade -y \
-    && apt-get install iceweasel -y 
+#Install firefox v59
+RUN sudo apt-get install libgtk-3-0 -y \
+     && sudo apt-get install libdbus-glib-1-2 -y \
+     && wget -O /tmp/firefox-59.0.tar.bz2 https://ftp.mozilla.org/pub/firefox/releases/59.0/linux-x86_64/en-US/firefox-59.0.tar.bz2 \
+     && tar -xjf /tmp/firefox-59.0.tar.bz2 \
+     && sudo mv firefox /opt/firefox59 \
+     && sudo ln -s /opt/firefox59/firefox-bin /usr/bin/firefox
 
-#Install geckodriver V0.24 for linux
-RUN wget -O /tmp/geckodriver.tar.gz https://github.com/mozilla/geckodriver/releases/download/v0.24.0/geckodriver-v0.24.0-linux64.tar.gz \
+#Install geckodriver V0.23 for linux
+RUN wget -O /tmp/geckodriver.tar.gz https://github.com/mozilla/geckodriver/releases/download/v0.23.0/geckodriver-v0.23.0-linux64.tar.gz \
     && tar -C /opt -zxf /tmp/geckodriver.tar.gz \
     && rm /tmp/geckodriver.tar.gz 
 
