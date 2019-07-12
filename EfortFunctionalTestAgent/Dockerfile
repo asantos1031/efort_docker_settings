@@ -68,10 +68,12 @@ RUN echo "deb [arch=amd64] https://packages.microsoft.com/ubuntu/16.04/prod xeni
 
 RUN chmod +x /opt/mssql/bin/sqlservr
 
+RUN ( /opt/mssql/bin/sqlservr & ) | grep -q "Service Broker manager has started"
+
 RUN sudo apt-get install lsof \
 	&& sudo apt-get install redis-server -y
 
-RUN nohup redis-server&
+RUN nohup redis-server& 
 
 RUN addgroup ${BAMBOO_GROUP} && \
      adduser --home ${BAMBOO_USER_HOME} --ingroup ${BAMBOO_GROUP} --disabled-password ${BAMBOO_USER}
